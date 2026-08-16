@@ -1,0 +1,32 @@
+[package]
+name = "vmodal-smartglass-system-core"
+version = "0.1.0"
+edition = "2024"
+license = "Proprietary"
+description = "Platform-neutral streaming core for the VModal smart-glasses SDK"
+
+[lib]
+name = "vmodal_smartglass_core"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+async-trait = "0.1.89"
+bitflags = { version = "2.10.0", features = ["serde"] }
+bytes = "1.10.1"
+futures-util = { version = "0.3.31", features = ["sink"] }
+jni = "0.22.4"
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.145"
+srt-tokio = "0.4.4"
+thiserror = "2.0.17"
+tokio = { version = "1.48.0", features = ["rt", "net", "sync", "time"] }
+url = "2.5.7"
+zeroize = { version = "1.8.2", features = ["derive"] }
+
+[dev-dependencies]
+tokio = { version = "1.48.0", features = ["macros", "rt-multi-thread", "time"] }
+
+[profile.release]
+lto = "thin"
+panic = "unwind"
+strip = "symbols"
