@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="650" height="32" viewBox="0 0 650 32" role="img" aria-label="Android API 31 plus, Kotlin 2.2, Rust core, SRT live transport">
+  <title>Smart Glass SDK technology badges</title>
+  <defs>
+    <linearGradient id="android" x1="0" x2="1">
+      <stop offset="0" stop-color="#167D45"/>
+      <stop offset="1" stop-color="#3DDC84"/>
+    </linearGradient>
+    <linearGradient id="kotlin" x1="0" x2="1">
+      <stop offset="0" stop-color="#7F52FF"/>
+      <stop offset="1" stop-color="#C750E8"/>
+    </linearGradient>
+    <linearGradient id="rust" x1="0" x2="1">
+      <stop offset="0" stop-color="#30363D"/>
+      <stop offset="1" stop-color="#57606A"/>
+    </linearGradient>
+    <linearGradient id="srt" x1="0" x2="1">
+      <stop offset="0" stop-color="#0066CC"/>
+      <stop offset="1" stop-color="#00A6D6"/>
+    </linearGradient>
+  </defs>
+  <g font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="12" font-weight="600" fill="#fff" text-anchor="middle">
+    <rect x="0" y="0" width="156" height="32" rx="8" fill="url(#android)"/>
+    <text x="78" y="20">ANDROID · API 31+</text>
+    <rect x="164" y="0" width="142" height="32" rx="8" fill="url(#kotlin)"/>
+    <text x="235" y="20">KOTLIN · 2.2</text>
+    <rect x="314" y="0" width="142" height="32" rx="8" fill="url(#rust)"/>
+    <text x="385" y="20">RUST · CORE</text>
+    <rect x="464" y="0" width="186" height="32" rx="8" fill="url(#srt)"/>
+    <text x="557" y="20">SRT · LIVE TRANSPORT</text>
+  </g>
+</svg>
