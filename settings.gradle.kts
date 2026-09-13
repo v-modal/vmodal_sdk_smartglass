@@ -35,3 +35,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "vmodal-smartglass-sdk"
 include(":kotlin_client")
+include(":examples:00_simulator:app")

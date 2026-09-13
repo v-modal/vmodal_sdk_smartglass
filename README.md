@@ -18,6 +18,7 @@
 |---|---|---|
 | 💬 | **Developer support** | [Join the VModal AI Discord](https://discord.gg/XGxgBQqkaY) |
 | 🚀 | **SDK quickstart** | [Build and start your first stream](docs_sdk/readme.md) |
+| 🥽 | **Android simulator** | [Run with Meta Mock Device Kit](examples/00_simulator/README.md) |
 | 🧭 | **Developer portal** | [Explore VModal developer resources](https://www.v-modal.com/developers) |
 | 🌐 | **VModal platform** | [Visit VModal](https://www.v-modal.com) |
 
@@ -133,6 +134,8 @@ target; do not log or persist its stream ID or passphrase.
 
 - [SDK quickstart](docs_sdk/readme.md) — build commands, Kotlin integration,
   lifecycle, and cleanup.
+- [Android simulator](examples/00_simulator/README.md) — install an Android 14
+  AVD and exercise the Meta Mock Device Kit without physical glasses.
 - [VModal](https://www.v-modal.com) — the VModal platform.
 - [VModal for developers](https://www.v-modal.com/developers) — APIs, SDKs,
   and integration resources.

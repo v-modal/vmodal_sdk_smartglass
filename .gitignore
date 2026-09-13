@@ -2,3 +2,4 @@
 .idea/
 local.properties
 **/build/
+examples/00_simulator/.simulator/
