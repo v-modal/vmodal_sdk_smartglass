@@ -3,7 +3,7 @@
 Build the Android library, connect `SmartGlassClient`, and stream a wearable
 camera feed to a short-lived SRT ingest target.
 
-[← Back to the Smart Glass SDK overview](../readme.md)
+[← Back to the Smart Glass SDK overview](../README.md)
 
 ## Requirements
 
