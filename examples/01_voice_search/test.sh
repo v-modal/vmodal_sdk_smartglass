@@ -48,7 +48,7 @@ voice_mock() {
     ## Usage:
       ANDROID_SERIAL=emulator-5556 bash test.sh mock -PvmodalMavenRepo=/absolute/path/to/maven-repo
   '
-  voice_gradle "$@" :adapters:meta:connectedMockDebugAndroidTest \
+  voice_gradle "$@" --continue :adapters:meta:connectedMockDebugAndroidTest \
     :adapters:image_android:connectedDebugAndroidTest :app:connectedMockDebugAndroidTest
 }
 

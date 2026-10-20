@@ -55,6 +55,7 @@ class MetaSpeechDisplayTest {
         assertEquals("Find white shirt in my collection", events.last().rawText)
         assertEquals(1L, events.last().turnId)
         collecting.cancelAndJoin()
+        mock.awaitStopped()
         assertFalse(mock.listening)
 
         val scope = SessionScope(7, "test-user", "vid_file", "shirts", "video", 1, "vid_img")
@@ -108,6 +109,7 @@ class MetaSpeechDisplayTest {
         mock.transcript("白いシャツ")
         val failure = withTimeout(3_000) { result.await().exceptionOrNull() } as? AppException
         assertEquals(FailureCode.SpeechUnavailable, failure?.failure?.code)
+        mock.awaitStopped()
         assertFalse(mock.listening)
         mock.disconnect()
         withTimeout(3_000) { gateway.readiness.first { !it.connected } }
@@ -125,6 +127,7 @@ class MetaSpeechDisplayTest {
             mock.completion()
             val error = withTimeout(3_000) { result.await().exceptionOrNull() } as? AppException
             assertEquals(FailureCode.NoSpeech, error?.failure?.code)
+            mock.awaitStopped()
             assertFalse(mock.listening)
         }
         assertEquals(1, gateway.sessionsCreated)
@@ -148,6 +151,7 @@ class MetaSpeechDisplayTest {
             val transcript = withTimeout(3_000) { result.await() }
             assertEquals(turn.turnId, transcript.turnId)
             assertEquals("Find white shirt in my collection", transcript.rawText)
+            mock.awaitStopped()
             assertFalse(mock.listening)
         }
         assertEquals(1, gateway.sessionsCreated)

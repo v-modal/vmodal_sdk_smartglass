@@ -34,6 +34,10 @@ class MetaSimulator(private val context: Context) {
         while (!glasses.services.speech.isListening) delay(20)
     }
 
+    suspend fun awaitStopped() = withTimeout(3_000) {
+        while (glasses.services.speech.isListening) delay(20)
+    }
+
     fun transcript(text: String, final: Boolean = true) {
         glasses.services.speech.simulateTranscription(text, isFinal = final, confidence = 0.9f)
     }

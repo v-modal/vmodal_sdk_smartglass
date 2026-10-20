@@ -100,6 +100,7 @@ class VoiceSearchFlowTest {
             assertEquals("Find white shirt in my collection", screen.query!!.text)
             assertEquals(7L, screen.query!!.scope.versionLancedb)
             assertNotNull(screen.image)
+            simulator.awaitStopped()
             assertFalse(simulator.listening)
         }
         assertEquals(20, searchRequests().size)
@@ -125,6 +126,7 @@ class VoiceSearchFlowTest {
         assertEquals(20, searchRequests().size)
         graph.controller.background()
         assertFalse(graph.meta.readiness.value.ready)
+        simulator.awaitStopped()
         assertFalse(simulator.listening)
     }
 
