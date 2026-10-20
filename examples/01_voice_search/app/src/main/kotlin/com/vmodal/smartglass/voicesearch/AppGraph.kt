@@ -12,6 +12,10 @@ class AppGraph(context: Context, scope: CoroutineScope, val vmodal: VmodalSessio
     val meta = MetaDeviceGateway(context, scope)
     val controller = VoiceSearchController(scope, meta, MetaSpeechAdapter(meta), vmodal.search,
         vmodal.images, AndroidImagePreparer(), MetaDisplayAdapter(meta))
+    suspend fun selectCollection(collection: String, stream: String) {
+        controller.reset()
+        controller.setup(vmodal.selectCollection(collection, stream))
+    }
     suspend fun logout() { try { controller.reset() } finally { vmodal.close() } }
     suspend fun close() { try { controller.close() } finally { vmodal.close() } }
 }

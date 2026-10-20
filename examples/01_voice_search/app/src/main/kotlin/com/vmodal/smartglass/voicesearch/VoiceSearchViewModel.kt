@@ -42,7 +42,7 @@ class VoiceSearchViewModel(application: Application) : AndroidViewModel(applicat
         setup = viewModelScope.launch {
             cleanup?.join()
             runSetup {
-                graph.controller.setup(graph.vmodal.selectCollection(collection, stream.trim()))
+                graph.selectCollection(collection, stream.trim())
                 message.value = "Glasses preparation requested"
             }
         }
