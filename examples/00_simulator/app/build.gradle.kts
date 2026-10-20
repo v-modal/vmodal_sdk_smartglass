@@ -15,6 +15,7 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         manifestPlaceholders["mwdat_application_id"] = ""
         manifestPlaceholders["mwdat_client_token"] = ""
     }
@@ -33,5 +34,9 @@ kotlin {
 
 dependencies {
     implementation(libs.mwdat.core)
+    // MockDeviceKit's power-off path references StreamStoppedReason from camera.
+    implementation(libs.mwdat.camera)
     implementation(libs.mwdat.mockdevice)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.ext.junit)
 }

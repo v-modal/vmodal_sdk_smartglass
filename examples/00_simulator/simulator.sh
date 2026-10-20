@@ -13,6 +13,7 @@ help='
     bash simulator.sh simulator_firmware_start ./greatwhite_sim Greatwhite 5556
     bash simulator.sh simulator_firmware_launcher 5556
     bash simulator.sh simulator_test
+    bash simulator.sh simulator_integration_test
 '
 
 simulator_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -372,6 +373,21 @@ simulator_test() {
   printf 'Simulator example structure and shell syntax are valid.\n'
 }
 
+simulator_integration_test() {
+  local help='
+    ## Usage:
+      bash examples/00_simulator/simulator.sh simulator_integration_test
+      ANDROID_SERIAL=emulator-5556 bash examples/00_simulator/simulator.sh simulator_integration_test
+  '
+  simulator_export_env
+  simulator_test
+  # connectedDebugAndroidTest fails on assertion errors, including UI-caught errors.
+  (cd "$sdk_dir" && ./gradlew --no-daemon \
+    :examples:00_simulator:app:lintDebug \
+    :examples:00_simulator:app:assembleDebug \
+    :examples:00_simulator:app:connectedDebugAndroidTest)
+}
+
 case "${1:-help}" in
   simulator_install_tools) simulator_install_tools ;;
   simulator_install) simulator_install "${2:-Greatwhite}" ;;
@@ -385,6 +401,7 @@ case "${1:-help}" in
   simulator_firmware_start) simulator_firmware_start "${2:-}" "${3:-Greatwhite}" "${4:-5556}" ;;
   simulator_firmware_launcher) simulator_firmware_launcher "${2:-5556}" ;;
   simulator_test) simulator_test ;;
+  simulator_integration_test) simulator_integration_test ;;
   help|-h|--help) printf '%s\n' "$help" ;;
   *) printf 'Unknown simulator command: %s\n%s\n' "$1" "$help" >&2; exit 2 ;;
 esac

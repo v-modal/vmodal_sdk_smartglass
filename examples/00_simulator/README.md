@@ -18,9 +18,6 @@ the initial setup app crashes. Use it only for firmware research.
 - JDK 17
 - Android SDK 36 build tools
 - Android Emulator with an Android 14 Google APIs image
-- A classic GitHub token with `read:packages` access to Meta's DAT packages,
-  exported as `GITHUB_TOKEN` or stored as `github_token` in
-  `sdk_smartglass/local.properties`
 - Apple Silicon macOS for the experimental firmware path
 
 The installer does not create a Python, Conda, or other project environment.
@@ -114,12 +111,28 @@ Build the Android example:
 bash simulator.sh simulator_build
 ```
 
-The complete smoke test is the headless `simulator_run` command followed by
-checking the launched activity:
+Run the lifecycle regression test on a booted emulator, from the SDK root:
 
 ```bash
-adb -s emulator-5556 shell dumpsys activity activities | grep com.vmodal.smartglass.simulator
+ANDROID_SERIAL=emulator-5556 bash examples/00_simulator/simulator.sh simulator_integration_test
 ```
+
+This builds and lints the app, then tests pairing, power on, unfold, don,
+doff, fold, power off, a second power cycle, and reset/re-pair through the
+actual app buttons. Any error status fails the test. Reports are saved under
+`examples/00_simulator/app/build/reports/`.
+
+The SDK's `.github/workflows/run_test.yaml` sets up JDK 17, Android SDK 36, and
+an Android 14 x86_64 emulator in GitHub Actions. The release process exports it
+unchanged to the public repository. Its job runs only in
+`v-modal/vmodal_sdk_smartglass`, on
+pushes to `main`, pull requests, or manual dispatch. DAT 0.8.0 is available
+from Maven Central, so these tests require no package credentials.
+
+The simulator must include `mwdat-camera` alongside `mwdat-core` and
+`mwdat-mockdevice`, all at the same catalog version. Mock Device Kit's shutdown
+path loads `com.meta.media.stream.proto.StreamStoppedReason` from the camera
+artifact; omitting it causes the power-off sequence to fail at runtime.
 
 ## Upstream references
 
