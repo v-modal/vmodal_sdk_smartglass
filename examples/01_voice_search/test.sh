@@ -38,7 +38,9 @@ voice_test() {
     :adapters:meta:lintProductionDebug :adapters:meta:lintMockDebug \
     :adapters:image_android:lintDebug :app:lintProductionDebug :app:lintMockDebug \
     :app:testProductionDebugUnitTest :app:testMockDebugUnitTest \
-    :app:assembleProductionRelease :app:assembleMockDebug verifyBoundaries
+    :app:assembleProductionRelease :app:assembleMockDebug \
+    :adapters:meta:assembleMockDebugAndroidTest :adapters:image_android:assembleDebugAndroidTest \
+    :app:assembleMockDebugAndroidTest verifyBoundaries
 }
 
 voice_mock() {

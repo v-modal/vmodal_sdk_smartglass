@@ -13,6 +13,7 @@ Implementation date: 2026-10-21. Candidate DAT: 1.0.1. Official public reference
 | Speech | MDK final/partial transcript and completion, en-US, stop, errors and locale behavior covered by native tests |
 | Native display | MDK accepts local bitmap payload; content read from official test server; real native button callback tested |
 | Session ownership | One shared DAT session, explicit teardown/recreation; unsupported audio-only models rejected |
+| DAT display ACK race | Native ACK can arrive before SDK waiter registration; bounded same-operation retry requires a real accepted response, with no reflection or captured-payload success fallback |
 | Real phone/model/firmware | Pending: no physical phone/glasses attached |
 | Meta AI app/account access | Pending: account registration, firmware compatibility, locale and deployment eligibility require physical proof |
 | Real collection/ranking/image contract | Pending: no live authenticated collection selected; SDK wire contracts tested using deterministic responses |

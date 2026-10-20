@@ -196,6 +196,20 @@ class VoiceSearchControllerTest {
         f.controller.close()
     }
 
+    @Test fun rejectedListeningReplacementNeverStartsAnotherMicrophone() = runTest {
+        val f = ready()
+        f.controller.listen(); runCurrent(); f.final(); runCurrent()
+        assertEquals(ScreenKind.ShowingImage, f.controller.state.value.kind)
+        f.display.onRender = { if (it.kind == ScreenKind.Listening) DisplayResult.Unavailable else DisplayResult.Accepted }
+        f.controller.listen(); runCurrent()
+        assertEquals(1, f.speech.turns.size)
+        assertEquals(1, f.queries.size)
+        assertEquals(FailureCode.DisplayUnavailable, f.controller.state.value.failure?.code)
+        assertEquals(Stage.Display, f.controller.state.value.failure?.stage)
+        assertNull(f.controller.state.value.image)
+        f.controller.close()
+    }
+
     @Test fun rejectedRenderCannotBecomeShowingImage() = runTest {
         val f = ready()
         f.display.onRender = { if (it.image != null) DisplayResult.Unavailable else DisplayResult.Accepted }

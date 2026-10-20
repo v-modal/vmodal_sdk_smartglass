@@ -16,7 +16,7 @@ The implementation covers P1–P5 and reproducible P6 local/mock commands. P0 an
 
 | Check | Result |
 | --- | --- |
-| New example offline | Pass: 31 core + 14 VModal + 2 Meta mapping tests in each flavor (49 JVM executions), lint, APKs and dependency boundaries |
+| New example offline | Pass: 32 core + 14 VModal + 5 Meta mapping/submission tests in each flavor (56 JVM executions), lint, APKs and dependency boundaries |
 | New Meta simulator | Pass: 6 MDK tests, including identical final-only consecutive turns within one session |
 | Image instrumentation | Pass: 4 Android tests |
 | App instrumentation | Pass: 3 Android tests, including native Listen and 20 sequential rank-1 searches |

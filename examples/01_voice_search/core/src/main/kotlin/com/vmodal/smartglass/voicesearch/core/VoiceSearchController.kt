@@ -107,8 +107,13 @@ class VoiceSearchController(
         val listening = publish(token, ScreenKind.Listening, "Listening", actions = setOf(Action.Cancel), render = false)
         active = scope.launch {
             guarded(token) {
-                clear(token)
-                if (listening != null) bestEffort { render(token, listening) }
+                // An image-free Listening screen replaces the previous result in one submission.
+                if (listening != null) when (val result = render(token, listening)) {
+                    DisplayResult.Accepted -> Unit
+                    DisplayResult.Unavailable -> throw AppException(AppFailure(Stage.Display,
+                        FailureCode.DisplayUnavailable, true, "Glasses display unavailable"))
+                    is DisplayResult.Failed -> throw AppException(result.failure)
+                }
                 checkCurrent(token)
                 var final: TranscriptEvent? = null
                 speechLock.withLock {

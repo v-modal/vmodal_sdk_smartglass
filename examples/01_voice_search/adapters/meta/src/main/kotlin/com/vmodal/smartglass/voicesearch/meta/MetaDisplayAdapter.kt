@@ -44,7 +44,7 @@ class MetaDisplayAdapter(private val gateway: MetaDeviceGateway) : DisplayPort {
             // A native click may arrive as soon as the device sees content, before sendContent resumes.
             activeScreen = screen
             try {
-                display.sendContent {
+                accepted = displaySubmission { display.sendContent {
                     flexBox(direction = Direction.COLUMN, gap = 8, padding = 16) {
                         text(screen.status.take(120), style = TextStyle.BODY)
                         screen.transcript?.takeIf { it.isNotBlank() }?.let { text(it.take(160), style = TextStyle.META) }
@@ -58,7 +58,7 @@ class MetaDisplayAdapter(private val gateway: MetaDeviceGateway) : DisplayPort {
                             })
                         }
                     }
-                }.fold(onSuccess = { accepted = it }, onFailure = { _, _ -> accepted = false })
+                }.fold(onSuccess = { it }, onFailure = { _, _ -> false }) }
                 if (!accepted || epoch != gateway.generation || !gateway.readiness.value.displayReady) {
                     return@withContext DisplayResult.Failed(failure(Stage.Display, FailureCode.DisplayUnavailable, "Glasses rejected the display submission"))
                 }
@@ -74,8 +74,15 @@ class MetaDisplayAdapter(private val gateway: MetaDeviceGateway) : DisplayPort {
     }
 
     override suspend fun clear() = lock.withLock {
-        activeScreen = null
-        try { gateway.display?.clearDisplay() } finally { bitmap?.recycle(); bitmap = null }
+        withContext(Dispatchers.Default) {
+            activeScreen = null
+            try {
+                val display = gateway.display
+                if (display != null && !displaySubmission {
+                        display.clearDisplay().fold(onSuccess = { it }, onFailure = { _, _ -> false })
+                    }) throw AppException(failure(Stage.Display, FailureCode.DisplayUnavailable, "Unable to clear the glasses display"))
+            } finally { bitmap?.recycle(); bitmap = null }
+        }
         Unit
     }
 }

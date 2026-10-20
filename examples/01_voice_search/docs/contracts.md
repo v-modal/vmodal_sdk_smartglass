@@ -1,5 +1,7 @@
 # Implemented contracts
 
+DAT 1.0.1 can receive a fast native display ACK before installing its response waiter. This was observed in public x86_64 CI and confirmed in the pinned SDK bytecode. The Meta adapter retries only a timed-out idempotent submission of the same screen/clear, with two 2-second attempts inside the controller's 5-second display bound. Explicit rejection fails immediately; cancellation propagates; only a genuine SDK accepted result counts as success. Entering Listening replaces the old image with its image-free root in one submission, without a redundant clear round trip. Exhausted acknowledgements remain an explicit display failure; retries do not assert physical rendering.
+
 `core` exposes neutral immutable Kotlin records and ports. The app constructs one owner, a Meta gateway shared by speech/display, one authenticated VModal gateway, and the Android image preparer. Only `adapters/meta` imports DAT and only `adapters/vmodal` imports the VModal SDK. The boundary verification task checks imports, the resolved Maven artifact, core dependencies, and absence of MockDeviceKit from production release.
 
 Authentication calls SDK `auth.me`, creates an identity-configured client, lists visible `vid_file` groups, and freezes the selected group's advertised numeric index version with account/stream/session generation. No default index version is invented. Standalone images are explicitly unsupported until validated.
