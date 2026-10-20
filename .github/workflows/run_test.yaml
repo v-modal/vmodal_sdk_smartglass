@@ -16,6 +16,76 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  secret_detection:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd
+        with:
+          persist-credentials: false
+      - name: Scan public candidate for verified secrets
+        run: |
+          curl --fail --location --retry 3 https://github.com/trufflesecurity/trufflehog/releases/download/v3.95.9/trufflehog_3.95.9_linux_amd64.tar.gz --output "$RUNNER_TEMP/trufflehog.tar.gz"
+          echo "f6d1106b85107d79527ed7a5b98b592beadd8b770dc3c9e8c1ad99e1b2cf127e  $RUNNER_TEMP/trufflehog.tar.gz" | sha256sum --check --strict
+          tar -xzf "$RUNNER_TEMP/trufflehog.tar.gz" -C "$RUNNER_TEMP" trufflehog
+          "$RUNNER_TEMP/trufflehog" filesystem . --fail --only-verified --no-update
+
+  voice_search_test:
+    if: ${{ github.repository == 'v-modal/vmodal_sdk_smartglass' }}
+    needs: secret_detection
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd
+        with:
+          persist-credentials: false
+      # Install a separate Maven package. The example never includes SDK sources.
+      # This pinned public-source installation is usable before Central publication.
+      - name: Fetch Android SDK package source
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd
+        with:
+          repository: v-modal/vmodal_sdk_android
+          ref: 22b28fb477d720a0abf771ac83a91cb7659819f1
+          path: .voice-sdk-package
+          persist-credentials: false
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407
+        with:
+          packages: platform-tools platforms;android-36 build-tools;36.0.0
+      - name: Install isolated VModal Maven package
+        working-directory: .voice-sdk-package
+        run: ./gradlew --no-daemon publishAllPublicationsToCompatibilityRepository
+      - name: JVM contracts, lint, release build and dependency boundaries
+        working-directory: examples/01_voice_search
+        run: bash test.sh test -PvmodalMavenRepo="$GITHUB_WORKSPACE/.voice-sdk-package/build/compat-repo"
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Meta 1.0.1 speech and display simulator; mock VModal endpoint only
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          disable-animations: true
+          working-directory: examples/01_voice_search
+          script: bash test.sh mock -PvmodalMavenRepo="$GITHUB_WORKSPACE/.voice-sdk-package/build/compat-repo"
+      - name: Upload voice-search reports and APKs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: voice-search-${{ github.run_id }}
+          path: |
+            examples/01_voice_search/**/build/reports/
+            examples/01_voice_search/**/build/outputs/androidTest-results/
+            examples/01_voice_search/app/build/outputs/apk/
+          if-no-files-found: warn
+
   simulator_test:
     if: ${{ github.repository == 'v-modal/vmodal_sdk_smartglass' }}
     runs-on: ubuntu-latest

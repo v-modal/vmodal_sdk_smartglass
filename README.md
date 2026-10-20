@@ -19,12 +19,18 @@
 | 💬 | **Developer support** | [Join the VModal AI Discord](https://discord.gg/XGxgBQqkaY) |
 | 🚀 | **SDK quickstart** | [Build and start your first stream](docs_sdk/readme.md) |
 | 🥽 | **Android simulator** | [Run with Meta Mock Device Kit](examples/00_simulator/README.md) |
+| 🎙️ | **Experimental voice search** | [Speech → VModal rank-1 image → glasses display](examples/01_voice_search/README.md) |
 | 🧭 | **Developer portal** | [Explore VModal developer resources](https://www.v-modal.com/developers) |
 | 🌐 | **VModal platform** | [Visit VModal](https://www.v-modal.com) |
 
 > [!NOTE]
 > This SDK streams live camera video from Android smart glasses. For video
 > upload, indexing, and multimodal search, use the VModal Android SDK instead.
+
+The independent [voice-search companion example](examples/01_voice_search/README.md)
+consumes the VModal Android SDK as a separate Maven package and uses DAT 1.0.1
+speech/display. It includes a new Mock Device Kit test flow. Physical glasses
+and live collection acceptance are still pending; see its capability matrix.
 
 ## Make presence feel immediate
 
